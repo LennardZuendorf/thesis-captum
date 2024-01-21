@@ -46,6 +46,10 @@ class LLMAttributionResult:
     def seq_attr_dict(self):
         return {k: v for v, k in zip(self.seq_attr.cpu().tolist(), self.input_tokens)}
 
+    @property
+    def token_attr_np(self):
+        return self.token_attr.cpu().numpy()
+
     def plot_token_attr(self, show=False):
         """
         Generate a matplotlib plot for visualising the attribution

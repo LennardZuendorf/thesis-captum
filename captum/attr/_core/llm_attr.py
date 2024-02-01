@@ -243,7 +243,8 @@ class LLMAttribution(Attribution):
         init_model_inp = perturbed_input
 
         model_inp = init_model_inp
-        model_kwargs = {"attention_mask": torch.tensor([[1] * model_inp.shape[1]])}
+        attention_mask = torch.tensor([[1] * model_inp.shape[1]]).to(self.device)
+        model_kwargs = {"attention_mask":attention_mask)}
 
         log_prob_list = []
         outputs = None
@@ -259,7 +260,7 @@ class LLMAttribution(Attribution):
                 outputs = self.model.forward(**model_inputs)
             else:
                 outputs = self.model.forward(
-                    model_inp, attention_mask=torch.tensor([[1] * model_inp.shape[1]])
+                    model_inp, attention_mask=attention_mask
                 )
             new_token_logits = outputs.logits[:, -1]
             log_probs = torch.nn.functional.log_softmax(new_token_logits, dim=1)
